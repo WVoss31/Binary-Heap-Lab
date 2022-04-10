@@ -78,8 +78,32 @@ public class BinaryHeap<E> extends ArrayList<E> implements Queue<E> {
      */
     @Override
     public boolean add(E element) {
-        // You must provide
+        super.add(element);
+        int index = super.indexOf(element);
+        E parentNode = super.get(this.findParent(index));
+        
+        if(super.size() > 2) {
+            while(comp.compare(element, parentNode) == -1) {
+                super.set(index/2, element);
+                super.set(index, parentNode);
+                
+                if(super.indexOf(element) == 1) {
+                    break;
+                }
+                index = super.indexOf(element);
+                parentNode = super.get(this.findParent(index));   
+            }
+        }
         return true;
+    }
+    
+
+    
+    private void swap(int index1, int index2) {
+        E placeholder = super.get(index1);
+        super.set(index1, super.get(index2));
+        super.set(index2, placeholder);
+        
     }
 
     /**
@@ -91,8 +115,46 @@ public class BinaryHeap<E> extends ArrayList<E> implements Queue<E> {
      */
     @Override
     public E remove() {
-        // You must provide
-        return null;
+       E removed = super.get(1);
+    this.swap(1, this.size());
+    super.remove(this.size());
+    int index = 1;
+    
+    while(index < this.size()){
+        if(rightLeafIndex(index) <= this.size()){
+            if(comp.compare(super.get(leftLeafIndex(index)), super.get(rightLeafIndex(index)))<0) {
+                this.swap(index, leftLeafIndex(index));
+                index = leftLeafIndex(index);
+            }
+            else if (comp.compare(super.get(rightLeafIndex(index)), super.get(leftLeafIndex(index)))<0) {
+                this.swap(index, rightLeafIndex(index));
+                index = rightLeafIndex(index);
+            }
+        }
+        else if(leftLeafIndex(index) <= this.size() && comp.compare(super.get(index), super.get(leftLeafIndex(index)))>0) {
+
+            this.swap(index, leftLeafIndex(index));
+            index = leftLeafIndex(index);
+        }
+        else {
+            index = leftLeafIndex(index);
+        }
+    }
+
+    return removed; 
+
+    }
+    
+    private int leftLeafIndex(int index) {
+        return (index*2);
+    }
+    
+    private int rightLeafIndex(int index) {
+        return (index*2)+1;
+    }
+    
+        private int findParent(int i) {
+        return i/2;
     }
 
     /**
