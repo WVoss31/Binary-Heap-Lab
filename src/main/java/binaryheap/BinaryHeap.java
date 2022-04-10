@@ -80,18 +80,18 @@ public class BinaryHeap<E> extends ArrayList<E> implements Queue<E> {
     public boolean add(E element) {
         super.add(element);
         int index = super.indexOf(element);
-        E parentNode = super.get(this.findParent(index));
+        E parentNode = super.get(findParent(index));
         
         if(super.size() > 2) {
             while(comp.compare(element, parentNode) == -1) {
-                super.set(index/2, element);
+                super.set(findParent(index), element);
                 super.set(index, parentNode);
                 
                 if(super.indexOf(element) == 1) {
                     break;
                 }
                 index = super.indexOf(element);
-                parentNode = super.get(this.findParent(index));   
+                parentNode = super.get(findParent(index));   
             }
         }
         return true;
